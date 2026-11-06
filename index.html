@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A harmless ransomware-awareness simulation.">
+  <title>Security Awareness Demo</title>
+  <style>
+    :root { color-scheme: dark; font-family: Arial, Helvetica, sans-serif; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center;
+      padding: 22px; background: #0b1020; color: #f4f6fb;
+    }
+    main {
+      width: min(100%, 620px); padding: 28px; border: 1px solid #30394d;
+      border-radius: 18px; background: #141b2d; box-shadow: 0 18px 60px #0008;
+    }
+    .tag {
+      display: inline-block; padding: 6px 10px; border-radius: 999px;
+      background: #173b2b; color: #9df0bd; font-size: 12px;
+      font-weight: 700; letter-spacing: .08em;
+    }
+    h1 { margin: 18px 0 8px; font-size: clamp(26px, 6vw, 38px); }
+    p { color: #c4ccda; line-height: 1.6; }
+    button {
+      border: 0; border-radius: 10px; padding: 13px 18px; margin-top: 12px;
+      background: #3978f6; color: white; font-size: 16px; font-weight: 700;
+      cursor: pointer;
+    }
+    button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+    .progress-wrap { height: 12px; margin: 22px 0 10px; border-radius: 99px; background: #30394d; overflow: hidden; }
+    .progress { width: 0%; height: 100%; background: #54d68b; transition: width 1s linear; }
+    .small { font-size: 13px; color: #9ca8bc; }
+    #loading, #alert { display: none; }
+    #alert {
+      margin-top: 24px; padding: 22px; border: 1px solid #9b343b;
+      border-radius: 14px; background: #32191f;
+    }
+    #alert h2 { margin: 0 0 10px; color: #ff747d; font-size: clamp(23px, 5vw, 32px); }
+    .safe-note {
+      margin-top: 18px; padding: 12px 14px; border-radius: 10px;
+      background: #173b2b; color: #b8f4ce; line-height: 1.5;
+    }
+    footer { margin-top: 24px; color: #8793a8; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <main>
+    <span class="tag">CYBERSECURITY AWARENESS DEMO</span>
+    <section id="intro">
+      <h1>Secure document viewer</h1>
+      <p>This interactive demonstration shows how a ransomware-style warning might appear. It does not access your device or files.</p>
+      <button id="start">Start 30-second simulation</button>
+      <p class="small">The countdown begins only when you press the button.</p>
+    </section>
+
+    <section id="loading" aria-live="polite">
+      <h1>Checking simulated environment…</h1>
+      <p id="status">Preparing demonstration</p>
+      <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+      <p class="small"><span id="seconds">30</span> seconds remaining</p>
+    </section>
+
+    <section id="alert" role="status" aria-live="assertive">
+      <h2>SIMULATED DEVICE LOCK</h2>
+      <p><strong>Your device has been locked.</strong></p>
+      <p>This is a staged ransomware-awareness message, not a real device lock. Your phone is functioning normally.</p>
+      <div class="safe-note">
+        <strong>SIMULATION COMPLETE:</strong> No files were opened, changed, encrypted, uploaded or deleted. No information was collected.
+      </div>
+      <button id="again">Run simulation again</button>
+    </section>
+    <footer>Educational demonstration only · No downloads · No permissions · No data collection</footer>
+  </main>
+
+  <script>
+    const startButton = document.getElementById('start');
+    const againButton = document.getElementById('again');
+    const intro = document.getElementById('intro');
+    const loading = document.getElementById('loading');
+    const alertBox = document.getElementById('alert');
+    const progress = document.getElementById('progress');
+    const secondsLabel = document.getElementById('seconds');
+    const status = document.getElementById('status');
+    let timer = null;
+
+    function startDemo() {
+      if (timer) clearInterval(timer);
+      let remaining = 30;
+      intro.style.display = 'none';
+      alertBox.style.display = 'none';
+      loading.style.display = 'block';
+      progress.style.width = '0%';
+      secondsLabel.textContent = remaining;
+      status.textContent = 'Preparing demonstration';
+
+      timer = setInterval(() => {
+        remaining -= 1;
+        secondsLabel.textContent = remaining;
+        progress.style.width = ((30 - remaining) / 30 * 100) + '%';
+        if (remaining === 20) status.textContent = 'Running fictional security checks';
+        if (remaining === 10) status.textContent = 'Finalizing visual demonstration';
+        if (remaining <= 0) {
+          clearInterval(timer);
+          timer = null;
+          loading.style.display = 'none';
+          alertBox.style.display = 'block';
+        }
+      }, 1000);
+    }
+
+    startButton.addEventListener('click', startDemo);
+    againButton.addEventListener('click', startDemo);
+  </script>
+</body>
+</html>
